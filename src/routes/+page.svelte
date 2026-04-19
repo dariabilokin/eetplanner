@@ -27,11 +27,11 @@
 	<title>Eetplanner</title>
 </svelte:head>
 
-<main class="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-8 px-4 py-8 sm:px-6">
+<main class="app-page mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-8 px-4 py-8 sm:px-6">
 	<section class="flex flex-col gap-4">
-		<p class="text-sm font-semibold uppercase tracking-wide text-emerald-700">Eetplanner</p>
-		<h1 class="max-w-3xl text-4xl font-semibold text-zinc-950 sm:text-5xl">Plan meals without rebuilding the same list every week.</h1>
-		<p class="max-w-2xl text-lg text-zinc-700">
+		<p class="text-sm font-semibold uppercase tracking-wide text-yellow-300">Eetplanner</p>
+		<h1 class="max-w-3xl text-4xl font-semibold text-yellow-100 sm:text-5xl">Plan meals without rebuilding the same list every week.</h1>
+		<p class="app-muted max-w-2xl text-lg">
 			Start with recipes. Menus, calorie totals, and shopping lists will build from that data.
 		</p>
 	</section>
@@ -40,10 +40,10 @@
 		{#each links as link}
 			<a
 				href={link.href}
-				class="rounded-lg border border-zinc-200 bg-white p-4 transition hover:border-emerald-500 hover:shadow-sm"
+				class="app-panel rounded-lg p-4 transition hover:border-yellow-200"
 			>
-				<h2 class="text-lg font-semibold text-zinc-950">{link.title}</h2>
-				<p class="mt-2 text-sm leading-6 text-zinc-600">{link.text}</p>
+				<h2 class="text-lg font-semibold text-yellow-100">{link.title}</h2>
+				<p class="app-muted mt-2 text-sm leading-6">{link.text}</p>
 			</a>
 		{/each}
 	</section>

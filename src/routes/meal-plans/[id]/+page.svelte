@@ -6,15 +6,15 @@
 	<title>{data.plan.name} | Eetplanner</title>
 </svelte:head>
 
-<main class="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-6 px-4 py-6 sm:px-6">
+<main class="app-page mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-6 px-4 py-6 sm:px-6">
 	<header class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
 		<div>
-			<a href="/meal-plans" class="text-sm font-medium text-emerald-700">Back to meal plans</a>
-			<h1 class="mt-2 text-3xl font-semibold text-zinc-950">{data.plan.name}</h1>
-			<p class="mt-2 text-zinc-600">{data.plan.startDate} to {data.plan.endDate}</p>
+			<a href="/meal-plans" class="app-link text-sm font-medium">Back to meal plans</a>
+			<h1 class="mt-2 text-3xl font-semibold text-yellow-100">{data.plan.name}</h1>
+			<p class="app-muted mt-2">{data.plan.startDate} to {data.plan.endDate}</p>
 		</div>
 		<form method="POST" action="?/delete">
-			<button class="min-h-11 rounded-lg border border-red-300 px-4 text-sm font-semibold text-red-700">
+			<button class="min-h-11 rounded-lg border border-red-300 bg-red-950/30 px-4 text-sm font-semibold text-red-100 hover:bg-red-900/50">
 				Delete plan
 			</button>
 		</form>
@@ -22,46 +22,46 @@
 
 	<section class="grid gap-6">
 		{#each data.weeks as week}
-			<article class="rounded-lg border border-zinc-200 bg-white">
-				<header class="border-b border-zinc-200 p-4">
-					<h2 class="text-xl font-semibold text-zinc-950">Week of {week.weekStart}</h2>
+			<article class="app-panel-strong overflow-hidden rounded-lg">
+				<header class="border-b border-yellow-200/25 bg-green-950/70 p-4">
+					<h2 class="text-xl font-semibold text-yellow-100">Week of {week.weekStart}</h2>
 				</header>
 
 				<div class="overflow-x-auto">
-					<table class="w-full min-w-[980px] table-fixed border-collapse text-left">
+					<table class="w-full min-w-[1060px] table-fixed border-separate border-spacing-0 text-left">
 						<thead>
-							<tr class="border-b border-zinc-200">
-								<th class="w-32 bg-zinc-50 p-3 text-sm font-semibold text-zinc-700">Meal</th>
+							<tr>
+								<th class="sticky left-0 z-20 w-32 border-b border-r border-yellow-200/30 bg-green-950 p-3 text-sm font-semibold text-yellow-100">Meal</th>
 								{#each week.days as day}
-									<th class="p-3 align-top">
-										<p class="text-sm font-semibold text-zinc-950">{day.label}</p>
-										<p class="mt-1 text-xs text-zinc-500">{day.date}</p>
+									<th class="border-b border-r border-yellow-200/25 p-3 align-top odd:bg-[#153f29] even:bg-[#1f4e2c]">
+										<p class="text-sm font-semibold text-yellow-100">{day.label}</p>
+										<p class="app-muted mt-1 text-xs">{day.date}</p>
 									</th>
 								{/each}
 							</tr>
 						</thead>
 						<tbody>
 							{#each data.mealTypes as mealType, mealTypeIndex}
-								<tr class="border-b border-zinc-200 last:border-b-0">
-									<th class="bg-zinc-50 p-3 text-sm font-semibold capitalize text-zinc-700">{mealType}</th>
+								<tr>
+									<th class="sticky left-0 z-10 border-b border-r border-yellow-200/25 bg-green-950 p-3 text-sm font-semibold capitalize text-yellow-100">{mealType}</th>
 									{#each week.days as day}
 										{@const meal = day.meals[mealTypeIndex]}
-										<td class="p-3 align-top">
+										<td class="border-b border-r border-yellow-200/15 p-3 align-top odd:bg-[#17452c]/95 even:bg-[#225633]/95">
 											{#if meal}
-												<a href={`/recipes/${meal.recipeId}`} class="block font-semibold leading-6 text-zinc-950 hover:text-emerald-700">
+												<a href={`/recipes/${meal.recipeId}`} class="block font-semibold leading-6 text-yellow-100 hover:text-white">
 													{meal.recipeName}
 												</a>
-												<div class="mt-2 flex flex-wrap gap-1 text-xs text-zinc-700">
-													<span class="rounded-md bg-zinc-100 px-2 py-1">{meal.servings} serving{meal.servings === 1 ? '' : 's'}</span>
+												<div class="mt-2 flex flex-wrap gap-1 text-xs text-green-950">
+													<span class="rounded-md bg-yellow-100 px-2 py-1">{meal.servings} serving{meal.servings === 1 ? '' : 's'}</span>
 													{#if meal.caloriesPerServing !== null}
-														<span class="rounded-md bg-amber-100 px-2 py-1">{meal.caloriesPerServing * meal.servings} kcal</span>
+														<span class="rounded-md bg-[#f0bf43] px-2 py-1">{meal.caloriesPerServing * meal.servings} kcal</span>
 													{/if}
 													{#if meal.proteinPerServing !== null}
-														<span class="rounded-md bg-emerald-100 px-2 py-1">{meal.proteinPerServing * meal.servings}g protein</span>
+														<span class="rounded-md bg-[#a8d98f] px-2 py-1">{meal.proteinPerServing * meal.servings}g protein</span>
 													{/if}
 												</div>
 											{:else}
-												<span class="text-sm text-zinc-400">-</span>
+												<span class="app-muted text-sm">-</span>
 											{/if}
 										</td>
 									{/each}
@@ -69,13 +69,13 @@
 							{/each}
 						</tbody>
 						<tfoot>
-							<tr class="border-t border-zinc-200">
-								<th class="bg-zinc-50 p-3 text-sm font-semibold text-zinc-700">Total</th>
+							<tr>
+								<th class="sticky left-0 z-10 border-r border-yellow-200/30 bg-green-950 p-3 text-sm font-semibold text-yellow-100">Total</th>
 								{#each week.days as day}
-									<td class="p-3 align-top text-sm">
+									<td class="border-r border-yellow-200/20 bg-[#0f3322] p-3 align-top text-sm">
 										<div class="flex flex-wrap gap-1">
-											<span class="rounded-md bg-amber-100 px-2 py-1">{day.calories === null ? 'Incomplete kcal' : `${day.calories} kcal`}</span>
-											<span class="rounded-md bg-emerald-100 px-2 py-1">{day.protein === null ? 'Incomplete protein' : `${day.protein}g protein`}</span>
+											<span class="rounded-md bg-[#f0bf43] px-2 py-1 text-green-950">{day.calories === null ? 'Incomplete kcal' : `${day.calories} kcal`}</span>
+											<span class="rounded-md bg-[#a8d98f] px-2 py-1 text-green-950">{day.protein === null ? 'Incomplete protein' : `${day.protein}g protein`}</span>
 										</div>
 									</td>
 								{/each}

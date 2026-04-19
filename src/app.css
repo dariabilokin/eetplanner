@@ -1,1 +1,84 @@
 @import "tailwindcss";
+
+:root {
+	color: #f5d878;
+	background: #092418;
+	font-family:
+		Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+html {
+	background: #092418;
+}
+
+body {
+	min-height: 100vh;
+	margin: 0;
+	background:
+		radial-gradient(circle at top left, rgba(54, 122, 73, 0.42), transparent 34rem),
+		linear-gradient(135deg, #071b13 0%, #103a25 48%, #172f1d 100%);
+	color: #f5d878;
+}
+
+input,
+select,
+textarea {
+	background: #fffdf3;
+	color: #142019;
+}
+
+::placeholder {
+	color: #6f766d;
+}
+
+a {
+	text-underline-offset: 0.18em;
+}
+
+.app-page {
+	color: #f5d878;
+}
+
+.app-muted {
+	color: #d7c982;
+}
+
+.app-link {
+	color: #ffd75a;
+}
+
+.app-link:hover {
+	color: #fff1a6;
+}
+
+.app-panel {
+	border: 1px solid rgba(245, 216, 120, 0.26);
+	background: rgba(9, 36, 24, 0.86);
+	box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+}
+
+.app-panel-strong {
+	border: 1px solid rgba(245, 216, 120, 0.34);
+	background: rgba(6, 27, 18, 0.94);
+	box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
+}
+
+.app-input {
+	border: 1px solid rgba(245, 216, 120, 0.42);
+	background: #fffdf3;
+	color: #142019;
+}
+
+.app-input:focus {
+	border-color: #f5d878;
+	outline: 3px solid rgba(245, 216, 120, 0.28);
+}
+
+.app-button {
+	background: #f0bf43;
+	color: #112218;
+}
+
+.app-button:hover {
+	background: #ffd75a;
+}
