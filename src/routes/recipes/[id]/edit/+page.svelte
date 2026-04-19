@@ -21,25 +21,25 @@
 <main class="app-page mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-4 py-6 sm:px-6">
 	<header>
 		<a href={`/recipes/${data.recipe.id}`} class="app-link text-sm font-medium">Back to recipe</a>
-		<h1 class="mt-2 text-3xl font-semibold text-yellow-100">Edit recipe</h1>
+		<h1 class="mt-2 text-3xl font-semibold text-[var(--color-cream)]">Edit recipe</h1>
 	</header>
 
 	{#if form?.message}
-		<p class="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">{form.message}</p>
+		<p class="app-danger rounded-lg border p-3 text-sm">{form.message}</p>
 	{/if}
 
 	<form method="POST" class="app-panel grid gap-5 rounded-lg p-4">
 		<label class="grid gap-2">
-			<span class="text-sm font-semibold text-yellow-100">Name</span>
+			<span class="text-sm font-semibold text-[var(--color-cream)]">Name</span>
 			<input name="name" value={values.name} class="app-input min-h-11 rounded-lg px-3" required />
 		</label>
 
 		<div class="grid gap-5 lg:grid-cols-[20rem_1fr] lg:items-start">
 			<fieldset class="grid gap-2">
-				<legend class="text-sm font-semibold text-yellow-100">Meal types</legend>
+				<legend class="text-sm font-semibold text-[var(--color-cream)]">Meal types</legend>
 				<div class="grid grid-cols-2 gap-2">
 					{#each mealTypeOptions as mealType}
-						<label class="flex min-h-11 items-center gap-2 rounded-lg border border-yellow-200/30 bg-green-950/50 px-3 text-sm capitalize text-yellow-100">
+						<label class="flex min-h-11 items-center gap-2 rounded-lg border app-border app-surface-soft px-3 text-sm capitalize text-[var(--color-cream)]">
 							<input name="mealTypes" type="checkbox" value={mealType} checked={values.mealTypes.includes(mealType)} />
 							{mealType}
 						</label>
@@ -49,24 +49,24 @@
 
 			<div class="grid gap-4 sm:grid-cols-3">
 				<label class="grid content-start gap-2">
-					<span class="text-sm font-semibold text-yellow-100">Servings</span>
+					<span class="text-sm font-semibold text-[var(--color-cream)]">Servings</span>
 					<input name="servings" type="number" min="1" value={values.servings} class="app-input min-h-11 rounded-lg px-3" required />
 				</label>
 
 				<label class="grid content-start gap-2">
-					<span class="text-sm font-semibold text-yellow-100">Kcal per serving</span>
+					<span class="text-sm font-semibold text-[var(--color-cream)]">Kcal per serving</span>
 					<input name="caloriesPerServing" type="number" min="0" step="1" value={values.caloriesPerServing} class="app-input min-h-11 rounded-lg px-3" />
 				</label>
 
 				<label class="grid content-start gap-2">
-					<span class="text-sm font-semibold text-yellow-100">Protein grams</span>
+					<span class="text-sm font-semibold text-[var(--color-cream)]">Protein grams</span>
 					<input name="proteinPerServing" type="number" min="0" step="1" value={values.proteinPerServing} class="app-input min-h-11 rounded-lg px-3" />
 				</label>
 			</div>
 		</div>
 
 		<label class="grid gap-2">
-			<span class="text-sm font-semibold text-yellow-100">Ingredients</span>
+			<span class="text-sm font-semibold text-[var(--color-cream)]">Ingredients</span>
 			<textarea
 				name="ingredientLines"
 				rows="7"
@@ -78,7 +78,7 @@
 		</label>
 
 		<label class="grid gap-2">
-			<span class="text-sm font-semibold text-yellow-100">Cooking notes</span>
+			<span class="text-sm font-semibold text-[var(--color-cream)]">Cooking notes</span>
 			<textarea name="instructions" rows="6" class="app-input rounded-lg px-3 py-2">{values.instructions}</textarea>
 		</label>
 
@@ -86,7 +86,7 @@
 			<button class="app-button min-h-11 rounded-lg px-4 text-sm font-semibold">
 				Save changes
 			</button>
-			<a href={`/recipes/${data.recipe.id}`} class="inline-flex min-h-11 items-center justify-center rounded-lg border border-yellow-200/30 px-4 text-sm font-semibold text-yellow-100 hover:bg-green-950/50">
+			<a href={`/recipes/${data.recipe.id}`} class="inline-flex min-h-11 items-center justify-center rounded-lg border app-border px-4 text-sm font-semibold text-[var(--color-cream)] hover:app-surface-soft">
 				Cancel
 			</a>
 		</div>
