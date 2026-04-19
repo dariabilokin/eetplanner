@@ -10,7 +10,7 @@
 	<header class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
 		<div>
 			<a href="/" class="app-link text-sm font-medium">Eetplanner</a>
-			<h1 class="mt-2 text-3xl font-semibold text-[var(--color-cream)]">Recipes</h1>
+			<h1 class="mt-2 text-3xl font-semibold text-[var(--color-deep)]">Recipes</h1>
 			<p class="app-muted mt-2">Your source data for menus and shopping lists.</p>
 		</div>
 		<a
@@ -23,7 +23,7 @@
 
 	{#if data.recipes.length === 0}
 		<section class="app-panel rounded-lg border-dashed p-6">
-			<h2 class="text-lg font-semibold text-[var(--color-cream)]">No recipes yet</h2>
+			<h2 class="text-lg font-semibold text-[var(--color-deep)]">No recipes yet</h2>
 			<p class="app-muted mt-2">Add the first recipe with ingredients, servings, calories, and cooking notes.</p>
 			<a href="/recipes/new" class="app-link mt-4 inline-flex text-sm font-semibold">Create first recipe</a>
 		</section>
@@ -35,7 +35,7 @@
 					class="app-panel grid gap-3 rounded-lg p-4 transition hover:border-[var(--color-orange)] sm:grid-cols-[1fr_auto]"
 				>
 					<div>
-						<h2 class="text-lg font-semibold text-[var(--color-cream)]">{recipe.name}</h2>
+						<h2 class="text-lg font-semibold text-[var(--color-deep)]">{recipe.name}</h2>
 						<p class="app-muted mt-1 text-sm capitalize">{recipe.mealTypes.join(', ')}</p>
 					</div>
 					<div class="flex flex-wrap gap-2 text-sm text-[var(--color-deep)] sm:justify-end">

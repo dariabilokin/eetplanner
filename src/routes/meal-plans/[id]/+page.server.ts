@@ -1,8 +1,8 @@
 import { db } from '$lib/server/db'
-import { mealPlans, plannedMeals, recipes } from '$lib/server/db/schema'
+import { mealPlans, plannedMeals, recipeMealTypes, recipes } from '$lib/server/db/schema'
 import { addDays, mondayForDate } from '$lib/server/meal-plan-generator'
-import { error, redirect, type Actions } from '@sveltejs/kit'
-import { asc, eq } from 'drizzle-orm'
+import { error, fail, redirect, type Actions } from '@sveltejs/kit'
+import { and, asc, eq } from 'drizzle-orm'
 
 const mealTypeOrder = ['breakfast', 'lunch', 'dinner', 'snack']
 const weekDayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -40,6 +40,20 @@ export function load({ params }) {
 		})
 
 	const mealsByDateAndType = new Map<string, Map<string, (typeof rows)[number]>>()
+	const candidateRecipesByMealType: Record<string, Array<{ id: number; name: string }>> = {}
+
+	for (const mealType of mealTypeOrder) {
+		candidateRecipesByMealType[mealType] = db
+			.select({
+				id: recipes.id,
+				name: recipes.name
+			})
+			.from(recipes)
+			.innerJoin(recipeMealTypes, eq(recipeMealTypes.recipeId, recipes.id))
+			.where(eq(recipeMealTypes.mealType, mealType))
+			.orderBy(asc(recipes.name))
+			.all()
+	}
 
 	for (const meal of rows) {
 		const mealsByType = mealsByDateAndType.get(meal.date) ?? new Map<string, (typeof rows)[number]>()
@@ -66,10 +80,81 @@ export function load({ params }) {
 		weeks.push({ weekStart, days })
 	}
 
-	return { plan, weeks, mealTypes: mealTypeOrder }
+	return { plan, weeks, mealTypes: mealTypeOrder, candidateRecipesByMealType }
 }
 
 export const actions: Actions = {
+	replaceMeal: async ({ request, params }) => {
+		const mealPlanId = Number(params.id)
+		const formData = await request.formData()
+		const plannedMealId = Number(formData.get('plannedMealId'))
+		const recipeId = Number(formData.get('recipeId'))
+
+		if (!Number.isInteger(plannedMealId) || !Number.isInteger(recipeId)) {
+			return fail(400, { message: 'Choose a valid recipe.' })
+		}
+
+		const plannedMeal = db
+			.select()
+			.from(plannedMeals)
+			.where(eq(plannedMeals.id, plannedMealId))
+			.get()
+
+		if (!plannedMeal || plannedMeal.mealPlanId !== mealPlanId) {
+			return fail(404, { message: 'Planned meal not found.' })
+		}
+
+		const matchingRecipe = findRecipeForMealType(recipeId, plannedMeal.mealType)
+
+		if (!matchingRecipe) {
+			return fail(400, { message: `Recipe is not tagged for ${plannedMeal.mealType}.` })
+		}
+
+		db.update(plannedMeals)
+			.set({ recipeId })
+			.where(eq(plannedMeals.id, plannedMealId))
+			.run()
+	},
+	randomMeal: async ({ request, params }) => {
+		const mealPlanId = Number(params.id)
+		const formData = await request.formData()
+		const plannedMealId = Number(formData.get('plannedMealId'))
+
+		if (!Number.isInteger(plannedMealId)) {
+			return fail(400, { message: 'Choose a valid planned meal.' })
+		}
+
+		const plannedMeal = db
+			.select()
+			.from(plannedMeals)
+			.where(eq(plannedMeals.id, plannedMealId))
+			.get()
+
+		if (!plannedMeal || plannedMeal.mealPlanId !== mealPlanId) {
+			return fail(404, { message: 'Planned meal not found.' })
+		}
+
+		const candidates = db
+			.select({ id: recipes.id })
+			.from(recipes)
+			.innerJoin(recipeMealTypes, eq(recipeMealTypes.recipeId, recipes.id))
+			.where(eq(recipeMealTypes.mealType, plannedMeal.mealType))
+			.orderBy(asc(recipes.id))
+			.all()
+
+		const replacementPool =
+			candidates.length > 1 ? candidates.filter((recipe) => recipe.id !== plannedMeal.recipeId) : candidates
+		const replacement = replacementPool[Math.floor(Math.random() * replacementPool.length)]
+
+		if (!replacement) {
+			return fail(400, { message: `No recipes available for ${plannedMeal.mealType}.` })
+		}
+
+		db.update(plannedMeals)
+			.set({ recipeId: replacement.id })
+			.where(eq(plannedMeals.id, plannedMealId))
+			.run()
+	},
 	delete: ({ params }) => {
 		const id = Number(params.id)
 
@@ -77,6 +162,15 @@ export const actions: Actions = {
 
 		redirect(303, '/meal-plans')
 	}
+}
+
+function findRecipeForMealType(recipeId: number, mealType: string) {
+	return db
+		.select({ id: recipes.id })
+		.from(recipes)
+		.innerJoin(recipeMealTypes, eq(recipeMealTypes.recipeId, recipes.id))
+		.where(and(eq(recipes.id, recipeId), eq(recipeMealTypes.mealType, mealType)))
+		.get()
 }
 
 function totalFor(

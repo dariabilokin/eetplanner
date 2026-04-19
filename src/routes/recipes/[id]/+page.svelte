@@ -17,11 +17,11 @@
 	<header class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
 		<div>
 			<a href="/recipes" class="app-link text-sm font-medium">Back to recipes</a>
-			<h1 class="mt-2 text-3xl font-semibold text-[var(--color-cream)]">{data.recipe.name}</h1>
+			<h1 class="mt-2 text-3xl font-semibold text-[var(--color-deep)]">{data.recipe.name}</h1>
 			<p class="app-muted mt-2 capitalize">{data.mealTypes.join(', ')}</p>
 		</div>
 		<div class="flex gap-2">
-			<a href={`/recipes/${data.recipe.id}/edit`} class="inline-flex min-h-11 items-center justify-center rounded-lg border app-border px-4 text-sm font-semibold text-[var(--color-cream)] hover:app-surface-soft">
+			<a href={`/recipes/${data.recipe.id}/edit`} class="inline-flex min-h-11 items-center justify-center rounded-lg border app-border px-4 text-sm font-semibold text-[var(--color-deep)] hover:bg-[rgba(42,157,143,0.12)]">
 				Edit
 			</a>
 			<form method="POST" action="?/delete">
@@ -35,19 +35,19 @@
 	<section class="grid gap-3 sm:grid-cols-4">
 		<div class="app-panel rounded-lg p-4">
 			<p class="app-muted text-sm">Servings</p>
-			<p class="mt-1 text-2xl font-semibold text-[var(--color-cream)]">{data.recipe.servings}</p>
+			<p class="mt-1 text-2xl font-semibold text-[var(--color-deep)]">{data.recipe.servings}</p>
 		</div>
 		<div class="app-panel rounded-lg p-4">
 			<p class="app-muted text-sm">Kcal per serving</p>
-			<p class="mt-1 text-2xl font-semibold text-[var(--color-cream)]">{data.recipe.caloriesPerServing ?? 'Not set'}</p>
+			<p class="mt-1 text-2xl font-semibold text-[var(--color-deep)]">{data.recipe.caloriesPerServing ?? 'Not set'}</p>
 		</div>
 		<div class="app-panel rounded-lg p-4">
 			<p class="app-muted text-sm">Total kcal</p>
-			<p class="mt-1 text-2xl font-semibold text-[var(--color-cream)]">{totalCalories ?? 'Not set'}</p>
+			<p class="mt-1 text-2xl font-semibold text-[var(--color-deep)]">{totalCalories ?? 'Not set'}</p>
 		</div>
 		<div class="app-panel rounded-lg p-4">
 			<p class="app-muted text-sm">Protein</p>
-			<p class="mt-1 text-2xl font-semibold text-[var(--color-cream)]">
+			<p class="mt-1 text-2xl font-semibold text-[var(--color-deep)]">
 				{#if data.recipe.proteinPerServing === null}
 					Not set
 				{:else}
@@ -58,14 +58,14 @@
 	</section>
 
 	<section>
-		<h2 class="text-xl font-semibold text-[var(--color-cream)]">Ingredients</h2>
+		<h2 class="text-xl font-semibold text-[var(--color-deep)]">Ingredients</h2>
 		<ul class="app-panel mt-3 divide-y divide-[rgba(233,196,106,0.22)] rounded-lg">
 			{#each data.ingredients as ingredient}
 				<li class="grid gap-1 p-4 sm:grid-cols-[9rem_1fr]">
 					<span class="app-muted text-sm font-semibold">
 						{ingredient.quantity ?? ''} {ingredient.unit ?? ''}
 					</span>
-					<span class="text-[var(--color-cream)]">
+					<span class="text-[var(--color-deep)]">
 						{ingredient.name}
 						{#if ingredient.notes}
 							<span class="app-muted">- {ingredient.notes}</span>
@@ -78,7 +78,7 @@
 
 	{#if data.recipe.instructions}
 		<section>
-			<h2 class="text-xl font-semibold text-[var(--color-cream)]">Cooking notes</h2>
+			<h2 class="text-xl font-semibold text-[var(--color-deep)]">Cooking notes</h2>
 			<p class="app-panel mt-3 whitespace-pre-wrap rounded-lg p-4 leading-7">{data.recipe.instructions}</p>
 		</section>
 	{/if}
