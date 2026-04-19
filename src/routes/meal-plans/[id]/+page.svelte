@@ -17,13 +17,18 @@
 			<p class="app-muted mt-2">{data.plan.startDate} to {data.plan.endDate}</p>
 		</div>
 		<div class="flex flex-col gap-3 sm:items-end">
+			<form method="POST" action="?/delete">
+				<button class="app-danger min-h-11 rounded-lg border px-4 text-sm font-semibold">
+					Delete week
+				</button>
+			</form>
 			<div class="inline-flex rounded-lg border app-border app-surface-soft p-1">
 				<button
 					type="button"
 					class={`min-h-10 rounded-md px-3 text-sm font-semibold ${viewMode === 'table' ? 'app-badge text-[var(--color-deep)]' : 'text-[var(--color-cream)] hover:bg-[rgba(42,157,143,0.32)]'}`}
 					onclick={() => (viewMode = 'table')}
 				>
-					Table
+					Week
 				</button>
 				<button
 					type="button"
@@ -33,11 +38,6 @@
 					Day
 				</button>
 			</div>
-			<form method="POST" action="?/delete">
-				<button class="app-danger min-h-11 rounded-lg border px-4 text-sm font-semibold">
-					Delete plan
-				</button>
-			</form>
 		</div>
 	</header>
 
@@ -51,13 +51,13 @@
 
 					<div class="overflow-x-auto">
 						<table class="w-full min-w-[1060px] table-fixed border-separate border-spacing-0 text-left">
-							<thead>
+							<thead class="sticky top-0 z-30 shadow-[0_8px_18px_rgba(0,0,0,0.18)]">
 								<tr>
-									<th class="app-border app-surface sticky left-0 z-20 w-32 border-b border-r p-3 text-sm font-semibold text-[var(--color-cream)]">Meal</th>
+									<th class="app-border sticky left-0 z-40 w-32 border-b border-r bg-[var(--color-teal)] p-3 text-sm font-semibold text-[var(--color-cream)]">Meal</th>
 									{#each week.days as day}
-										<th class="app-border border-b border-r p-3 align-top odd:bg-[rgba(38,70,83,0.92)] even:bg-[rgba(42,157,143,0.34)]">
+										<th class="app-border border-b border-r p-3 align-top odd:bg-[rgba(42,157,143,0.9)] even:bg-[rgba(244,162,97,0.78)]">
 											<p class="text-sm font-semibold text-[var(--color-cream)]">{day.label}</p>
-											<p class="app-muted mt-1 text-xs">{day.date}</p>
+											<p class="mt-1 text-xs text-[var(--color-deep)]">{day.date}</p>
 										</th>
 									{/each}
 								</tr>

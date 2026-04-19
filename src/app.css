@@ -20,10 +20,7 @@ html {
 body {
 	min-height: 100vh;
 	margin: 0;
-	background:
-		radial-gradient(circle at top left, rgba(42, 157, 143, 0.42), transparent 34rem),
-		radial-gradient(circle at bottom right, rgba(244, 162, 97, 0.2), transparent 30rem),
-		linear-gradient(135deg, #1d3540 0%, #264653 48%, #203b45 100%);
+	background: var(--color-deep);
 	color: var(--color-mustard);
 }
 
