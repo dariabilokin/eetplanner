@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db'
-import { recipeIngredients, recipes } from '$lib/server/db/schema'
+import { recipeIngredients, recipeMealTypes, recipes } from '$lib/server/db/schema'
 import { ingredientLinesFromRows, parseRecipeForm } from '$lib/server/recipe-form'
 import { error, redirect, type Actions } from '@sveltejs/kit'
 import { eq } from 'drizzle-orm'
@@ -20,8 +20,17 @@ export function load({ params }) {
 		.orderBy(recipeIngredients.id)
 		.all()
 
+	const mealTypes = db
+		.select()
+		.from(recipeMealTypes)
+		.where(eq(recipeMealTypes.recipeId, id))
+		.orderBy(recipeMealTypes.mealType)
+		.all()
+		.map((row) => row.mealType)
+
 	return {
 		recipe,
+		mealTypes,
 		ingredientLines: ingredientLinesFromRows(ingredients)
 	}
 }
@@ -41,13 +50,17 @@ export const actions: Actions = {
 			db.update(recipes)
 				.set({
 					name: parsed.name,
-					mealType: parsed.mealType,
 					servings: parsed.servings,
 					caloriesPerServing: parsed.caloriesPerServing,
 					instructions: parsed.instructions,
 					updatedAt: now
 				})
 				.where(eq(recipes.id, id))
+				.run()
+
+			db.delete(recipeMealTypes).where(eq(recipeMealTypes.recipeId, id)).run()
+			db.insert(recipeMealTypes)
+				.values(parsed.mealTypes.map((mealType) => ({ recipeId: id, mealType })))
 				.run()
 
 			db.delete(recipeIngredients).where(eq(recipeIngredients.recipeId, id)).run()

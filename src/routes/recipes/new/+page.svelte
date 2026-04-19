@@ -3,12 +3,14 @@
 
 	let values = $derived(form?.values ?? {
 		name: '',
-		mealType: 'dinner',
+		mealTypes: ['dinner'],
 		servings: '2',
 		caloriesPerServing: '',
 		instructions: '',
 		ingredientLines: ''
 	});
+
+	const mealTypeOptions = ['breakfast', 'lunch', 'dinner', 'snack', 'dessert', 'side'];
 </script>
 
 <svelte:head>
@@ -32,17 +34,17 @@
 		</label>
 
 		<div class="grid gap-4 sm:grid-cols-3">
-			<label class="grid gap-2">
-				<span class="text-sm font-semibold text-zinc-800">Meal type</span>
-				<select name="mealType" value={values.mealType} class="min-h-11 rounded-lg border border-zinc-300 px-3">
-					<option value="breakfast">Breakfast</option>
-					<option value="lunch">Lunch</option>
-					<option value="dinner">Dinner</option>
-					<option value="snack">Snack</option>
-					<option value="dessert">Dessert</option>
-					<option value="side">Side</option>
-				</select>
-			</label>
+			<fieldset class="grid gap-2">
+				<legend class="text-sm font-semibold text-zinc-800">Meal types</legend>
+				<div class="grid grid-cols-2 gap-2">
+					{#each mealTypeOptions as mealType}
+						<label class="flex min-h-11 items-center gap-2 rounded-lg border border-zinc-300 px-3 text-sm capitalize">
+							<input name="mealTypes" type="checkbox" value={mealType} checked={values.mealTypes.includes(mealType)} />
+							{mealType}
+						</label>
+					{/each}
+				</div>
+			</fieldset>
 
 			<label class="grid gap-2">
 				<span class="text-sm font-semibold text-zinc-800">Servings</span>

@@ -2,7 +2,7 @@ import { fail, type ActionFailure } from '@sveltejs/kit'
 
 export type RecipeFormInput = {
 	name: string
-	mealType: string
+	mealTypes: string[]
 	servings: number
 	caloriesPerServing: number | null
 	instructions: string | null
@@ -20,7 +20,7 @@ export type RecipeFormError = {
 	message: string
 	values: {
 		name: string
-		mealType: string
+		mealTypes: string[]
 		servings: string
 		caloriesPerServing: string
 		instructions: string
@@ -33,7 +33,7 @@ const mealTypes = new Set(['breakfast', 'lunch', 'dinner', 'snack', 'dessert', '
 export function parseRecipeForm(formData: FormData): RecipeFormInput | ActionFailure<RecipeFormError> {
 	const values = {
 		name: stringValue(formData, 'name'),
-		mealType: stringValue(formData, 'mealType'),
+		mealTypes: formData.getAll('mealTypes').map(String),
 		servings: stringValue(formData, 'servings'),
 		caloriesPerServing: stringValue(formData, 'caloriesPerServing'),
 		instructions: stringValue(formData, 'instructions'),
@@ -48,8 +48,8 @@ export function parseRecipeForm(formData: FormData): RecipeFormInput | ActionFai
 		return formError('Recipe name is required.', values)
 	}
 
-	if (!mealTypes.has(values.mealType)) {
-		return formError('Choose a valid meal type.', values)
+	if (values.mealTypes.length === 0 || values.mealTypes.some((mealType) => !mealTypes.has(mealType))) {
+		return formError('Choose at least one valid meal type.', values)
 	}
 
 	if (!Number.isInteger(servings) || servings < 1) {
@@ -66,7 +66,7 @@ export function parseRecipeForm(formData: FormData): RecipeFormInput | ActionFai
 
 	return {
 		name: values.name,
-		mealType: values.mealType,
+		mealTypes: [...new Set(values.mealTypes)],
 		servings,
 		caloriesPerServing,
 		instructions: values.instructions || null,

@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db'
-import { recipeIngredients, recipes } from '$lib/server/db/schema'
+import { recipeIngredients, recipeMealTypes, recipes } from '$lib/server/db/schema'
 import { parseRecipeForm } from '$lib/server/recipe-form'
 import { redirect, type Actions } from '@sveltejs/kit'
 
@@ -18,7 +18,6 @@ export const actions: Actions = {
 				.insert(recipes)
 				.values({
 					name: parsed.name,
-					mealType: parsed.mealType,
 					servings: parsed.servings,
 					caloriesPerServing: parsed.caloriesPerServing,
 					instructions: parsed.instructions,
@@ -27,6 +26,10 @@ export const actions: Actions = {
 				})
 				.returning({ id: recipes.id })
 				.get()
+
+			db.insert(recipeMealTypes)
+				.values(parsed.mealTypes.map((mealType) => ({ recipeId: recipe.id, mealType })))
+				.run()
 
 			db.insert(recipeIngredients)
 				.values(

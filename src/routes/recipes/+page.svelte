@@ -36,7 +36,7 @@
 				>
 					<div>
 						<h2 class="text-lg font-semibold text-zinc-950">{recipe.name}</h2>
-						<p class="mt-1 text-sm capitalize text-zinc-600">{recipe.mealType}</p>
+						<p class="mt-1 text-sm capitalize text-zinc-600">{recipe.mealTypes.join(', ')}</p>
 					</div>
 					<div class="flex flex-wrap gap-2 text-sm text-zinc-700 sm:justify-end">
 						<span class="rounded-md bg-zinc-100 px-2 py-1">{recipe.servings} servings</span>

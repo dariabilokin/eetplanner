@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db'
-import { recipeIngredients, recipes } from '$lib/server/db/schema'
+import { recipeIngredients, recipeMealTypes, recipes } from '$lib/server/db/schema'
 import { error, redirect, type Actions } from '@sveltejs/kit'
 import { eq } from 'drizzle-orm'
 
@@ -19,7 +19,15 @@ export function load({ params }) {
 		.orderBy(recipeIngredients.id)
 		.all()
 
-	return { recipe, ingredients }
+	const mealTypes = db
+		.select()
+		.from(recipeMealTypes)
+		.where(eq(recipeMealTypes.recipeId, id))
+		.orderBy(recipeMealTypes.mealType)
+		.all()
+		.map((row) => row.mealType)
+
+	return { recipe, ingredients, mealTypes }
 }
 
 export const actions: Actions = {

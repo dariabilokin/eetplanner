@@ -1,15 +1,25 @@
-import { integer, real, sqliteTable, text } from 'drizzle-orm/sqlite-core'
+import { integer, primaryKey, real, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 
 export const recipes = sqliteTable('recipes', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   name: text('name').notNull(),
-  mealType: text('meal_type').notNull(),
   servings: integer('servings').notNull().default(1),
   caloriesPerServing: real('calories_per_serving'),
   instructions: text('instructions'),
   createdAt: text('created_at').notNull(),
   updatedAt: text('updated_at').notNull(),
 })
+
+export const recipeMealTypes = sqliteTable(
+  'recipe_meal_types',
+  {
+    recipeId: integer('recipe_id')
+      .notNull()
+      .references(() => recipes.id, { onDelete: 'cascade' }),
+    mealType: text('meal_type').notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.recipeId, table.mealType] })],
+)
 
 export const recipeIngredients = sqliteTable('recipe_ingredients', {
   id: integer('id').primaryKey({ autoIncrement: true }),

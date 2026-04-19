@@ -15,7 +15,7 @@
 		<div>
 			<a href="/recipes" class="text-sm font-medium text-emerald-700">Back to recipes</a>
 			<h1 class="mt-2 text-3xl font-semibold text-zinc-950">{data.recipe.name}</h1>
-			<p class="mt-2 capitalize text-zinc-600">{data.recipe.mealType}</p>
+			<p class="mt-2 capitalize text-zinc-600">{data.mealTypes.join(', ')}</p>
 		</div>
 		<div class="flex gap-2">
 			<a href={`/recipes/${data.recipe.id}/edit`} class="inline-flex min-h-11 items-center justify-center rounded-lg border border-zinc-300 px-4 text-sm font-semibold text-zinc-800">

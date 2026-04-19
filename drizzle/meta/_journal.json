@@ -8,6 +8,13 @@
       "when": 1776590763510,
       "tag": "0000_familiar_firelord",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1776591992550,
+      "tag": "0001_chubby_liz_osborn",
+      "breakpoints": true
     }
   ]
 }
