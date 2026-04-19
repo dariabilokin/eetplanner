@@ -86,7 +86,7 @@
 			<button class="app-button min-h-11 rounded-lg px-4 text-sm font-semibold">
 				Save changes
 			</button>
-			<a href={`/recipes/${data.recipe.id}`} class="inline-flex min-h-11 items-center justify-center rounded-lg border app-border px-4 text-sm font-semibold text-[var(--color-deep)] hover:bg-[rgba(42,157,143,0.12)]">
+			<a href={`/recipes/${data.recipe.id}`} class="inline-flex min-h-11 items-center justify-center rounded-lg border app-border px-4 text-sm font-semibold text-[var(--color-deep)] hover:bg-[rgba(218,203,149,0.28)]">
 				Cancel
 			</a>
 		</div>

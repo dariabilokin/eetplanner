@@ -25,14 +25,14 @@
 			<div class="inline-flex gap-1 rounded-lg border app-border app-surface-soft p-1">
 				<button
 					type="button"
-					class={`min-h-10 rounded-md px-3 text-sm font-semibold ${viewMode === 'table' ? 'app-badge text-[var(--color-deep)]' : 'text-[var(--color-deep)] hover:bg-[rgba(42,157,143,0.18)]'}`}
+					class={`min-h-10 rounded-md px-3 text-sm font-semibold ${viewMode === 'table' ? 'app-badge text-[var(--color-deep)]' : 'text-[var(--color-deep)] hover:bg-[rgba(218,203,149,0.42)]'}`}
 					onclick={() => (viewMode = 'table')}
 				>
 					Week
 				</button>
 				<button
 					type="button"
-					class={`min-h-10 rounded-md px-3 text-sm font-semibold ${viewMode === 'day' ? 'app-badge text-[var(--color-deep)]' : 'text-[var(--color-deep)] hover:bg-[rgba(42,157,143,0.18)]'}`}
+					class={`min-h-10 rounded-md px-3 text-sm font-semibold ${viewMode === 'day' ? 'app-badge text-[var(--color-deep)]' : 'text-[var(--color-deep)] hover:bg-[rgba(218,203,149,0.42)]'}`}
 					onclick={() => (viewMode = 'day')}
 				>
 					Day
@@ -55,7 +55,7 @@
 								<tr>
 									<th class="app-border sticky left-0 z-40 w-32 border-b border-r bg-[var(--color-teal)] p-3 text-sm font-semibold text-[var(--color-deep)]">Meal</th>
 									{#each week.days as day}
-										<th class="app-border border-b border-r p-3 align-top odd:bg-[rgba(42,157,143,0.9)] even:bg-[rgba(244,162,97,0.78)]">
+										<th class="app-border border-b border-r p-3 align-top odd:bg-[rgba(191,89,70,0.92)] even:bg-[rgba(218,203,149,0.88)]">
 											<p class="text-sm font-semibold text-[var(--color-deep)]">{day.label}</p>
 											<p class="mt-1 text-xs text-[var(--color-deep)]">{day.date}</p>
 										</th>
@@ -69,7 +69,7 @@
 										{#each week.days as day}
 											{@const meal = day.meals[mealTypeIndex]}
 											{@const candidates = data.candidateRecipesByMealType[mealType] ?? []}
-											<td class="app-border border-b border-r p-3 align-top odd:bg-[rgba(255,252,239,0.96)] even:bg-[rgba(42,157,143,0.12)]">
+											<td class="app-border border-b border-r p-3 align-top odd:bg-[rgba(253,251,251,0.98)] even:bg-[rgba(218,203,149,0.28)]">
 												{#if meal}
 													<a href={`/recipes/${meal.recipeId}`} class="block font-semibold leading-6 text-[var(--color-deep)] hover:text-[var(--color-coral)]">
 														{meal.recipeName}
@@ -86,7 +86,7 @@
 														</form>
 														<form method="POST" action="?/randomMeal">
 															<input type="hidden" name="plannedMealId" value={meal.id} />
-															<button class="inline-flex min-h-9 w-full items-center justify-center rounded-lg border app-border px-2 text-sm font-semibold text-[var(--color-deep)] hover:bg-[rgba(42,157,143,0.18)]" title="Random replacement">
+															<button class="inline-flex min-h-9 w-full items-center justify-center rounded-lg border app-border px-2 text-sm font-semibold text-[var(--color-deep)] hover:bg-[rgba(218,203,149,0.42)]" title="Random replacement">
 																🎲 Random
 															</button>
 														</form>
@@ -119,7 +119,7 @@
 						</div>
 					</header>
 
-					<div class="divide-y divide-[rgba(38,70,83,0.14)]">
+					<div class="divide-y divide-[rgba(15,7,5,0.14)]">
 						{#each data.mealTypes as mealType, mealTypeIndex}
 							{@const meal = day.meals[mealTypeIndex]}
 							{@const candidates = data.candidateRecipesByMealType[mealType] ?? []}
@@ -150,7 +150,7 @@
 										{/if}
 										<form method="POST" action="?/randomMeal" class="basis-full sm:basis-auto">
 											<input type="hidden" name="plannedMealId" value={meal.id} />
-											<button class="inline-flex min-h-8 items-center justify-center rounded-md border app-border px-2 text-xs font-semibold hover:bg-[rgba(42,157,143,0.18)]" title="Random replacement">
+											<button class="inline-flex min-h-8 items-center justify-center rounded-md border app-border px-2 text-xs font-semibold hover:bg-[rgba(218,203,149,0.42)]" title="Random replacement">
 												🎲 Random
 											</button>
 										</form>
