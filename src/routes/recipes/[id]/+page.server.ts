@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db'
-import { recipeIngredients, recipeMealTypes, recipes } from '$lib/server/db/schema'
+import { ingredients as ingredientTable, recipeIngredients, recipeMealTypes, recipes } from '$lib/server/db/schema'
 import { error, redirect, type Actions } from '@sveltejs/kit'
 import { eq } from 'drizzle-orm'
 
@@ -13,8 +13,17 @@ export function load({ params }) {
 	}
 
 	const ingredients = db
-		.select()
+		.select({
+			id: recipeIngredients.id,
+			recipeId: recipeIngredients.recipeId,
+			ingredientId: recipeIngredients.ingredientId,
+			name: ingredientTable.name,
+			quantity: recipeIngredients.quantity,
+			unit: recipeIngredients.unit,
+			notes: recipeIngredients.notes
+		})
 		.from(recipeIngredients)
+		.innerJoin(ingredientTable, eq(ingredientTable.id, recipeIngredients.ingredientId))
 		.where(eq(recipeIngredients.recipeId, id))
 		.orderBy(recipeIngredients.id)
 		.all()

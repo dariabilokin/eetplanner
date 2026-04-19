@@ -2,9 +2,11 @@ import { integer, primaryKey, real, sqliteTable, text } from 'drizzle-orm/sqlite
 
 export const recipes = sqliteTable('recipes', {
   id: integer('id').primaryKey({ autoIncrement: true }),
+  sourceId: text('source_id').unique(),
   name: text('name').notNull(),
   servings: integer('servings').notNull().default(1),
   caloriesPerServing: real('calories_per_serving'),
+  proteinPerServing: real('protein_per_serving'),
   instructions: text('instructions'),
   createdAt: text('created_at').notNull(),
   updatedAt: text('updated_at').notNull(),
@@ -21,12 +23,23 @@ export const recipeMealTypes = sqliteTable(
   (table) => [primaryKey({ columns: [table.recipeId, table.mealType] })],
 )
 
+export const ingredients = sqliteTable('ingredients', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  name: text('name').notNull(),
+  normalizedName: text('normalized_name').notNull().unique(),
+  defaultUnit: text('default_unit'),
+  createdAt: text('created_at').notNull(),
+  updatedAt: text('updated_at').notNull(),
+})
+
 export const recipeIngredients = sqliteTable('recipe_ingredients', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   recipeId: integer('recipe_id')
     .notNull()
     .references(() => recipes.id, { onDelete: 'cascade' }),
-  name: text('name').notNull(),
+  ingredientId: integer('ingredient_id')
+    .notNull()
+    .references(() => ingredients.id, { onDelete: 'restrict' }),
   quantity: real('quantity'),
   unit: text('unit'),
   notes: text('notes'),

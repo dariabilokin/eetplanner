@@ -6,6 +6,7 @@
 		mealTypes: ['dinner'],
 		servings: '2',
 		caloriesPerServing: '',
+		proteinPerServing: '',
 		instructions: '',
 		ingredientLines: ''
 	});
@@ -33,7 +34,7 @@
 			<input name="name" value={values.name} class="min-h-11 rounded-lg border border-zinc-300 px-3" required />
 		</label>
 
-		<div class="grid gap-4 sm:grid-cols-3">
+		<div class="grid gap-4 sm:grid-cols-4">
 			<fieldset class="grid gap-2">
 				<legend class="text-sm font-semibold text-zinc-800">Meal types</legend>
 				<div class="grid grid-cols-2 gap-2">
@@ -55,6 +56,11 @@
 				<span class="text-sm font-semibold text-zinc-800">Kcal per serving</span>
 				<input name="caloriesPerServing" type="number" min="0" step="1" value={values.caloriesPerServing} class="min-h-11 rounded-lg border border-zinc-300 px-3" />
 			</label>
+
+			<label class="grid gap-2">
+				<span class="text-sm font-semibold text-zinc-800">Protein grams</span>
+				<input name="proteinPerServing" type="number" min="0" step="1" value={values.proteinPerServing} class="min-h-11 rounded-lg border border-zinc-300 px-3" />
+			</label>
 		</div>
 
 		<label class="grid gap-2">
@@ -67,6 +73,7 @@
 				required
 			>{values.ingredientLines}</textarea>
 			<span class="text-sm text-zinc-600">Use one ingredient per line: quantity | unit | name | note.</span>
+			<a href="/ingredients" class="text-sm font-semibold text-emerald-700">Search saved ingredients</a>
 		</label>
 
 		<label class="grid gap-2">

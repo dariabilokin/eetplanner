@@ -5,7 +5,8 @@
 	"type": "module",
 	"scripts": {
 		"db:generate": "drizzle-kit generate",
-        "db:migrate": "drizzle-kit migrate",
+		"db:migrate": "drizzle-kit migrate",
+		"import:recipes": "node scripts/import-recipes.js",
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",

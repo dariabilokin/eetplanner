@@ -4,6 +4,9 @@
 	let totalCalories = $derived(
 		data.recipe.caloriesPerServing === null ? null : data.recipe.caloriesPerServing * data.recipe.servings
 	);
+	let totalProtein = $derived(
+		data.recipe.proteinPerServing === null ? null : data.recipe.proteinPerServing * data.recipe.servings
+	);
 </script>
 
 <svelte:head>
@@ -29,7 +32,7 @@
 		</div>
 	</header>
 
-	<section class="grid gap-3 sm:grid-cols-3">
+	<section class="grid gap-3 sm:grid-cols-4">
 		<div class="rounded-lg border border-zinc-200 bg-white p-4">
 			<p class="text-sm text-zinc-600">Servings</p>
 			<p class="mt-1 text-2xl font-semibold text-zinc-950">{data.recipe.servings}</p>
@@ -41,6 +44,16 @@
 		<div class="rounded-lg border border-zinc-200 bg-white p-4">
 			<p class="text-sm text-zinc-600">Total kcal</p>
 			<p class="mt-1 text-2xl font-semibold text-zinc-950">{totalCalories ?? 'Not set'}</p>
+		</div>
+		<div class="rounded-lg border border-zinc-200 bg-white p-4">
+			<p class="text-sm text-zinc-600">Protein</p>
+			<p class="mt-1 text-2xl font-semibold text-zinc-950">
+				{#if data.recipe.proteinPerServing === null}
+					Not set
+				{:else}
+					{data.recipe.proteinPerServing}g / {totalProtein}g
+				{/if}
+			</p>
 		</div>
 	</section>
 

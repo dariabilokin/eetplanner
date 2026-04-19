@@ -14,6 +14,11 @@
 			href: '/shopping-list',
 			title: 'Shopping list',
 			text: 'Collect ingredients from planned meals.'
+		},
+		{
+			href: '/ingredients',
+			title: 'Ingredients',
+			text: 'Search reusable ingredients as your recipe database grows.'
 		}
 	];
 </script>
@@ -31,7 +36,7 @@
 		</p>
 	</section>
 
-	<section class="grid gap-3 sm:grid-cols-3">
+	<section class="grid gap-3 sm:grid-cols-4">
 		{#each links as link}
 			<a
 				href={link.href}

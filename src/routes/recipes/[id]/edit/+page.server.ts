@@ -1,5 +1,6 @@
 import { db } from '$lib/server/db'
-import { recipeIngredients, recipeMealTypes, recipes } from '$lib/server/db/schema'
+import { ingredients as ingredientTable, recipeIngredients, recipeMealTypes, recipes } from '$lib/server/db/schema'
+import { getOrCreateIngredient } from '$lib/server/ingredients'
 import { ingredientLinesFromRows, parseRecipeForm } from '$lib/server/recipe-form'
 import { error, redirect, type Actions } from '@sveltejs/kit'
 import { eq } from 'drizzle-orm'
@@ -13,9 +14,15 @@ export function load({ params }) {
 		error(404, 'Recipe not found')
 	}
 
-	const ingredients = db
-		.select()
+	const recipeIngredientRows = db
+		.select({
+			name: ingredientTable.name,
+			quantity: recipeIngredients.quantity,
+			unit: recipeIngredients.unit,
+			notes: recipeIngredients.notes
+		})
 		.from(recipeIngredients)
+		.innerJoin(ingredientTable, eq(ingredientTable.id, recipeIngredients.ingredientId))
 		.where(eq(recipeIngredients.recipeId, id))
 		.orderBy(recipeIngredients.id)
 		.all()
@@ -31,7 +38,7 @@ export function load({ params }) {
 	return {
 		recipe,
 		mealTypes,
-		ingredientLines: ingredientLinesFromRows(ingredients)
+		ingredientLines: ingredientLinesFromRows(recipeIngredientRows)
 	}
 }
 
@@ -52,6 +59,7 @@ export const actions: Actions = {
 					name: parsed.name,
 					servings: parsed.servings,
 					caloriesPerServing: parsed.caloriesPerServing,
+					proteinPerServing: parsed.proteinPerServing,
 					instructions: parsed.instructions,
 					updatedAt: now
 				})
@@ -66,13 +74,17 @@ export const actions: Actions = {
 			db.delete(recipeIngredients).where(eq(recipeIngredients.recipeId, id)).run()
 			db.insert(recipeIngredients)
 				.values(
-					parsed.ingredients.map((ingredient) => ({
-						recipeId: id,
-						name: ingredient.name,
-						quantity: ingredient.quantity,
-						unit: ingredient.unit,
-						notes: ingredient.notes
-					}))
+					parsed.ingredients.map((recipeIngredient) => {
+						const ingredient = getOrCreateIngredient(recipeIngredient.name, recipeIngredient.unit)
+
+						return {
+							recipeId: id,
+							ingredientId: ingredient.id,
+							quantity: recipeIngredient.quantity,
+							unit: recipeIngredient.unit,
+							notes: recipeIngredient.notes
+						}
+					})
 				)
 				.run()
 		})

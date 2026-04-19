@@ -15,6 +15,13 @@
       "when": 1776591992550,
       "tag": "0001_chubby_liz_osborn",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1776592561061,
+      "tag": "0002_needy_ronan",
+      "breakpoints": true
     }
   ]
 }

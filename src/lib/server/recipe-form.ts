@@ -5,6 +5,7 @@ export type RecipeFormInput = {
 	mealTypes: string[]
 	servings: number
 	caloriesPerServing: number | null
+	proteinPerServing: number | null
 	instructions: string | null
 	ingredients: ParsedIngredient[]
 }
@@ -23,6 +24,7 @@ export type RecipeFormError = {
 		mealTypes: string[]
 		servings: string
 		caloriesPerServing: string
+		proteinPerServing: string
 		instructions: string
 		ingredientLines: string
 	}
@@ -36,12 +38,14 @@ export function parseRecipeForm(formData: FormData): RecipeFormInput | ActionFai
 		mealTypes: formData.getAll('mealTypes').map(String),
 		servings: stringValue(formData, 'servings'),
 		caloriesPerServing: stringValue(formData, 'caloriesPerServing'),
+		proteinPerServing: stringValue(formData, 'proteinPerServing'),
 		instructions: stringValue(formData, 'instructions'),
 		ingredientLines: stringValue(formData, 'ingredientLines')
 	}
 
 	const servings = Number(values.servings)
 	const caloriesPerServing = values.caloriesPerServing ? Number(values.caloriesPerServing) : null
+	const proteinPerServing = values.proteinPerServing ? Number(values.proteinPerServing) : null
 	const ingredients = parseIngredientLines(values.ingredientLines)
 
 	if (!values.name) {
@@ -60,6 +64,10 @@ export function parseRecipeForm(formData: FormData): RecipeFormInput | ActionFai
 		return formError('Calories per serving must be 0 or higher.', values)
 	}
 
+	if (proteinPerServing !== null && (!Number.isFinite(proteinPerServing) || proteinPerServing < 0)) {
+		return formError('Protein per serving must be 0 or higher.', values)
+	}
+
 	if (ingredients.length === 0) {
 		return formError('Add at least one ingredient.', values)
 	}
@@ -69,6 +77,7 @@ export function parseRecipeForm(formData: FormData): RecipeFormInput | ActionFai
 		mealTypes: [...new Set(values.mealTypes)],
 		servings,
 		caloriesPerServing,
+		proteinPerServing,
 		instructions: values.instructions || null,
 		ingredients
 	}

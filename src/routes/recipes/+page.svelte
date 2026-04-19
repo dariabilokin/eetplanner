@@ -44,6 +44,9 @@
 						{#if recipe.caloriesPerServing !== null}
 							<span class="rounded-md bg-amber-100 px-2 py-1">{recipe.caloriesPerServing} kcal</span>
 						{/if}
+						{#if recipe.proteinPerServing !== null}
+							<span class="rounded-md bg-emerald-100 px-2 py-1">{recipe.proteinPerServing}g protein</span>
+						{/if}
 					</div>
 				</a>
 			{/each}

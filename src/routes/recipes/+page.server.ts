@@ -9,6 +9,7 @@ export function load() {
 			name: recipes.name,
 			servings: recipes.servings,
 			caloriesPerServing: recipes.caloriesPerServing,
+			proteinPerServing: recipes.proteinPerServing,
 			ingredientCount: count(recipeIngredients.id)
 		})
 		.from(recipes)

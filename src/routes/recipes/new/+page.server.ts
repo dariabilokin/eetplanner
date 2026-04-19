@@ -1,5 +1,6 @@
 import { db } from '$lib/server/db'
 import { recipeIngredients, recipeMealTypes, recipes } from '$lib/server/db/schema'
+import { getOrCreateIngredient } from '$lib/server/ingredients'
 import { parseRecipeForm } from '$lib/server/recipe-form'
 import { redirect, type Actions } from '@sveltejs/kit'
 
@@ -20,6 +21,7 @@ export const actions: Actions = {
 					name: parsed.name,
 					servings: parsed.servings,
 					caloriesPerServing: parsed.caloriesPerServing,
+					proteinPerServing: parsed.proteinPerServing,
 					instructions: parsed.instructions,
 					createdAt: now,
 					updatedAt: now
@@ -33,13 +35,17 @@ export const actions: Actions = {
 
 			db.insert(recipeIngredients)
 				.values(
-					parsed.ingredients.map((ingredient) => ({
-						recipeId: recipe.id,
-						name: ingredient.name,
-						quantity: ingredient.quantity,
-						unit: ingredient.unit,
-						notes: ingredient.notes
-					}))
+					parsed.ingredients.map((recipeIngredient) => {
+						const ingredient = getOrCreateIngredient(recipeIngredient.name, recipeIngredient.unit)
+
+						return {
+							recipeId: recipe.id,
+							ingredientId: ingredient.id,
+							quantity: recipeIngredient.quantity,
+							unit: recipeIngredient.unit,
+							notes: recipeIngredient.notes
+						}
+					})
 				)
 				.run()
 
