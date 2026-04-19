@@ -64,6 +64,24 @@ export function addDays(date: string, days: number) {
 	return formatDate(value)
 }
 
+export function mondayForDate(date: string) {
+	const value = new Date(`${date}T00:00:00`)
+	const day = value.getDay()
+	const offset = day === 0 ? -6 : 1 - day
+	value.setDate(value.getDate() + offset)
+
+	return formatDate(value)
+}
+
+export function nextMonday(date = new Date()) {
+	const value = new Date(date)
+	const day = value.getDay()
+	const offset = day === 1 ? 0 : day === 0 ? 1 : 8 - day
+	value.setDate(value.getDate() + offset)
+
+	return formatDate(value)
+}
+
 export function formatDate(date: Date) {
 	const year = date.getFullYear()
 	const month = String(date.getMonth() + 1).padStart(2, '0')

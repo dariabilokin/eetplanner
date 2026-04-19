@@ -1,10 +1,26 @@
 <script lang="ts">
 	let { data, form } = $props();
 
-	const today = new Date().toISOString().slice(0, 10);
+	function formatDate(date: Date) {
+		const year = date.getFullYear();
+		const month = String(date.getMonth() + 1).padStart(2, '0');
+		const day = String(date.getDate()).padStart(2, '0');
+
+		return `${year}-${month}-${day}`;
+	}
+
+	function nextMonday() {
+		const date = new Date();
+		const day = date.getDay();
+		const offset = day === 1 ? 0 : day === 0 ? 1 : 8 - day;
+		date.setDate(date.getDate() + offset);
+
+		return formatDate(date);
+	}
+
 	const values = $derived(form?.values ?? {
 		name: '',
-		startDate: today,
+		startDate: nextMonday(),
 		days: '7',
 		servings: '1',
 		mealTypes: ['breakfast', 'lunch', 'dinner', 'snack']
@@ -39,8 +55,9 @@
 
 			<div class="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
 				<label class="grid gap-2">
-					<span class="text-sm font-semibold text-zinc-800">Start date</span>
+					<span class="text-sm font-semibold text-zinc-800">Week start</span>
 					<input name="startDate" type="date" value={values.startDate} class="min-h-11 rounded-lg border border-zinc-300 px-3" required />
+					<span class="text-sm text-zinc-600">Plans start on Monday.</span>
 				</label>
 
 				<label class="grid gap-2">

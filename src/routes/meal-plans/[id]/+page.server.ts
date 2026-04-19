@@ -1,9 +1,11 @@
 import { db } from '$lib/server/db'
 import { mealPlans, plannedMeals, recipes } from '$lib/server/db/schema'
+import { addDays, mondayForDate } from '$lib/server/meal-plan-generator'
 import { error, redirect, type Actions } from '@sveltejs/kit'
 import { asc, eq } from 'drizzle-orm'
 
 const mealTypeOrder = ['breakfast', 'lunch', 'dinner', 'snack']
+const weekDayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
 export function load({ params }) {
 	const id = Number(params.id)
@@ -37,35 +39,34 @@ export function load({ params }) {
 			return mealTypeOrder.indexOf(a.mealType) - mealTypeOrder.indexOf(b.mealType)
 		})
 
-	const days = rows.reduce<
-		Array<{
-			date: string
-			meals: typeof rows
-			calories: number | null
-			protein: number | null
-		}>
-	>((result, meal) => {
-		let day = result.find((item) => item.date === meal.date)
+	const mealsByDateAndType = new Map<string, Map<string, (typeof rows)[number]>>()
 
-		if (!day) {
-			day = { date: meal.date, meals: [], calories: 0, protein: 0 }
-			result.push(day)
-		}
+	for (const meal of rows) {
+		const mealsByType = mealsByDateAndType.get(meal.date) ?? new Map<string, (typeof rows)[number]>()
+		mealsByType.set(meal.mealType, meal)
+		mealsByDateAndType.set(meal.date, mealsByType)
+	}
 
-		day.meals.push(meal)
-		day.calories =
-			day.calories === null || meal.caloriesPerServing === null
-				? null
-				: day.calories + meal.caloriesPerServing * meal.servings
-		day.protein =
-			day.protein === null || meal.proteinPerServing === null
-				? null
-				: day.protein + meal.proteinPerServing * meal.servings
+	const firstMonday = mondayForDate(plan.startDate)
+	const lastMonday = mondayForDate(plan.endDate)
+	const weeks = []
 
-		return result
-	}, [])
+	for (let weekStart = firstMonday; weekStart <= lastMonday; weekStart = addDays(weekStart, 7)) {
+		const days = weekDayLabels.map((label, index) => {
+			const date = addDays(weekStart, index)
+			const meals = mealsByDateAndType.get(date)
+			const dayMeals = mealTypeOrder.map((mealType) => meals?.get(mealType) ?? null)
+			const presentMeals = dayMeals.filter((meal) => meal !== null)
+			const calories = totalFor(presentMeals, 'caloriesPerServing')
+			const protein = totalFor(presentMeals, 'proteinPerServing')
 
-	return { plan, days }
+			return { label, date, meals: dayMeals, calories, protein }
+		})
+
+		weeks.push({ weekStart, days })
+	}
+
+	return { plan, weeks, mealTypes: mealTypeOrder }
 }
 
 export const actions: Actions = {
@@ -76,4 +77,25 @@ export const actions: Actions = {
 
 		redirect(303, '/meal-plans')
 	}
+}
+
+function totalFor(
+	meals: Array<{
+		servings: number
+		caloriesPerServing: number | null
+		proteinPerServing: number | null
+	}>,
+	key: 'caloriesPerServing' | 'proteinPerServing',
+) {
+	if (meals.length === 0) {
+		return null
+	}
+
+	return meals.reduce<number | null>((total, meal) => {
+		if (!meal || total === null || meal[key] === null) {
+			return null
+		}
+
+		return total + meal[key] * meal.servings
+	}, 0)
 }
