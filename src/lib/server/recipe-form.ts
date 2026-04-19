@@ -1,0 +1,120 @@
+import { fail, type ActionFailure } from '@sveltejs/kit'
+
+export type RecipeFormInput = {
+	name: string
+	mealType: string
+	servings: number
+	caloriesPerServing: number | null
+	instructions: string | null
+	ingredients: ParsedIngredient[]
+}
+
+export type ParsedIngredient = {
+	name: string
+	quantity: number | null
+	unit: string | null
+	notes: string | null
+}
+
+export type RecipeFormError = {
+	message: string
+	values: {
+		name: string
+		mealType: string
+		servings: string
+		caloriesPerServing: string
+		instructions: string
+		ingredientLines: string
+	}
+}
+
+const mealTypes = new Set(['breakfast', 'lunch', 'dinner', 'snack', 'dessert', 'side'])
+
+export function parseRecipeForm(formData: FormData): RecipeFormInput | ActionFailure<RecipeFormError> {
+	const values = {
+		name: stringValue(formData, 'name'),
+		mealType: stringValue(formData, 'mealType'),
+		servings: stringValue(formData, 'servings'),
+		caloriesPerServing: stringValue(formData, 'caloriesPerServing'),
+		instructions: stringValue(formData, 'instructions'),
+		ingredientLines: stringValue(formData, 'ingredientLines')
+	}
+
+	const servings = Number(values.servings)
+	const caloriesPerServing = values.caloriesPerServing ? Number(values.caloriesPerServing) : null
+	const ingredients = parseIngredientLines(values.ingredientLines)
+
+	if (!values.name) {
+		return formError('Recipe name is required.', values)
+	}
+
+	if (!mealTypes.has(values.mealType)) {
+		return formError('Choose a valid meal type.', values)
+	}
+
+	if (!Number.isInteger(servings) || servings < 1) {
+		return formError('Servings must be a whole number greater than 0.', values)
+	}
+
+	if (caloriesPerServing !== null && (!Number.isFinite(caloriesPerServing) || caloriesPerServing < 0)) {
+		return formError('Calories per serving must be 0 or higher.', values)
+	}
+
+	if (ingredients.length === 0) {
+		return formError('Add at least one ingredient.', values)
+	}
+
+	return {
+		name: values.name,
+		mealType: values.mealType,
+		servings,
+		caloriesPerServing,
+		instructions: values.instructions || null,
+		ingredients
+	}
+}
+
+export function ingredientLinesFromRows(
+	ingredients: Array<{ name: string; quantity: number | null; unit: string | null; notes: string | null }>
+) {
+	return ingredients
+		.map((ingredient) =>
+			[
+				ingredient.quantity ?? '',
+				ingredient.unit ?? '',
+				ingredient.name,
+				ingredient.notes ?? ''
+			].join(' | ')
+		)
+		.join('\n')
+}
+
+function parseIngredientLines(value: string): ParsedIngredient[] {
+	return value
+		.split('\n')
+		.map((line) => line.trim())
+		.filter(Boolean)
+		.map((line) => {
+			const [quantityValue = '', unitValue = '', nameValue = '', notesValue = ''] = line
+				.split('|')
+				.map((part) => part.trim())
+
+			const quantity = quantityValue ? Number(quantityValue) : null
+
+			return {
+				name: nameValue || line,
+				quantity: Number.isFinite(quantity) ? quantity : null,
+				unit: unitValue || null,
+				notes: notesValue || null
+			}
+		})
+		.filter((ingredient) => ingredient.name.length > 0)
+}
+
+function stringValue(formData: FormData, key: string) {
+	return String(formData.get(key) ?? '').trim()
+}
+
+function formError(message: string, values: RecipeFormError['values']) {
+	return fail(400, { message, values })
+}
